@@ -12,5 +12,23 @@ const app = new Vue({
   template: '<App/>'
 })
 
-console.log(app);
 
+books = [
+  {id:1,name:"test"},
+  {id:2,name:"test"},
+  {id:2,name:"test"}
+]
+
+/**
+ * Spread operators
+ * Object destructing
+ */
+
+// books.map((book)=> {
+
+//   const {id,name} = {...book}
+
+//   console.log(id);
+//   console.log(name);
+
+// })
