@@ -5,9 +5,13 @@
 <header>
     <h1>  TODOS </h1>
     <input type="text" class="new-todo" v-model="newTodo" placeholder="add task" @keyup.enter="addTodo" />
+  
 </header>
 
    <div class="main">
+
+       <input type="checkbox" class="toggle" v-model="allDone" style="transform: translateY(-42px);" />
+
        <ul class="todo-list">
          
          <li class="todo" :key="todo" v-for='todo in filtredTodo' :class="{completed : todo.completed}">
@@ -17,6 +21,8 @@
                  <label>
                      {{todo.name}}
                  </label>
+
+                 <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
 
              </div>
          </li>
@@ -45,6 +51,7 @@
 
        </ul>
 
+    <button class="clear-completed" v-show="doneTodo" @click.prevent="clearCompleted">clear</button>
    </footer>
 </section> 
 
@@ -58,6 +65,8 @@
 
 export default {
 
+
+  
   data(){
     return {
         todos:[],  
@@ -80,19 +89,17 @@ export default {
 
       deleteTodo(todo){
 
-
-      },
-      
-      deleteCompleted(){
-
-
+          this.todos = this.todos.filter(item => item !== todo);
       },
 
-      updateTodo(todo)
+      clearCompleted()
       {
 
+            this.todos = this.todos.filter(todo => !todo.completed)
 
       }
+
+    
   },
 
   /**
@@ -102,11 +109,42 @@ export default {
 computed:
 {
 
-    hasTodo(){
-             return this.todos.length > 0;
+    doneTodo()
+    {
+         //donetodo = entier donetodo = 0
+
+         return this.todos.filter(todo => todo.completed).length
+
     },
+
+    allDone:
+    {
+          get(){
+             
+               return this.remaining === 0; //true
+          },
+
+          set(value)
+          {
+
+
+               this.todos.forEach(todo => {
+
+                   todo.completed = value;
+               })
+
+          }
+
+    },
+
+    hasTodo(){
+             return this.todos.length > 0
+             
+             
+    },
+    
     remaining(){
-        return this.todos.filter(todo => !todo.completed).length
+        return this.todos.filter(todo => !todo.completed).length //entier
     },
 
     filtredTodo(){
@@ -124,6 +162,8 @@ computed:
              return this.todos
     }
 }
+
+
 
 
 
