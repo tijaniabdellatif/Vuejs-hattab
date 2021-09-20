@@ -35,6 +35,7 @@ body {
 
 :focus {
 	outline: 0;
+	background-color: yellow;
 }
 
 .hidden {

@@ -1,8 +1,9 @@
 <template>
   
     <div>
-      <todos></todos>
-     
+      <todos title="todo1"></todos>
+          <todos title="todo2"></todos>
+    
     </div>
 
 </template>

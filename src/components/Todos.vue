@@ -2,8 +2,10 @@
 
 <section class="todoapp">
 
+    <h1>{{ title }}</h1>
+
 <header>
-    <h1>  TODOS </h1>
+    
     <input type="text" class="new-todo" v-model="newTodo" placeholder="add task" @keyup.enter="addTodo" />
   
 </header>
@@ -14,17 +16,19 @@
 
        <ul class="todo-list">
          
-         <li class="todo" :key="todo" v-for='todo in filtredTodo' :class="{completed : todo.completed}">
+         <li class="todo" :key="todo" v-for='todo in filtredTodo' :class="{completed : todo.completed, editing : todo===editing }">
              <div class="view">
 
                 <input type="checkbox" v-model="todo.completed" class="toggle" />
-                 <label>
+                 <label @dblclick="editTodo(todo)">
                      {{todo.name}}
                  </label>
 
                  <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
 
              </div>
+
+             <input type="text" class="edit" v-model="todo.name"  v-directiveFocus="todo===editing" @keyup.enter="doneEdit" @blur="doneEdit"  @keyup.esc="cancelEdit"/>
          </li>
 
        </ul>
@@ -59,21 +63,28 @@
 </template>
 
 <script>
+import Vue from 'vue';
 /**
  * Filter sur trois conditions : "all", 'todo','done'
  */
 
 export default {
 
+    props:[
+        "title"
+    ],
 
-  
   data(){
     return {
         todos:[],  
         newTodo:'',
-        filter : 'all'
+        filter : 'all',
+        editing : null,
+        oldTodo: ""
     }
   },
+
+
 
   methods: {
       addTodo(){
@@ -96,6 +107,27 @@ export default {
       {
 
             this.todos = this.todos.filter(todo => !todo.completed)
+
+      },
+
+      editTodo(todo)
+      {
+
+            this.editing = todo;
+            this.oldTodo = todo.name;
+
+      },
+
+      doneEdit()
+      {
+          this.editing = null;
+      },
+
+      cancelEdit()
+      {
+          this.editing.name = this.oldTodo;
+          
+          this.doneEdit();
 
       }
 
@@ -161,7 +193,22 @@ computed:
 
              return this.todos
     }
-}
+},
+
+  directives:{
+
+      directiveFocus(el,value)
+      {
+          if(value)
+          {
+              Vue.nextTick(() => {
+
+                      el.focus();
+
+              })
+          }
+      }
+  }
 
 
 
